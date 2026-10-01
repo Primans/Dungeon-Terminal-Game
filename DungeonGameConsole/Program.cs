@@ -62,23 +62,36 @@ public class ShopItem
 
 public class Program
 {
-    static void BuyItem(Player player, List<ShopItem> ShopList, List<ShopItem> InventoryList, int shopChoice)
+    static void BuyItem(Player player, List<ShopItem> ShopList, List<ShopItem> InventoryList, int shopChoice, int buyQuantity)
     {
-        player.Gold -= ShopList[shopChoice - 1].Price;
-
         if (ShopList[shopChoice - 1].Name == "Health Potion" || ShopList[shopChoice - 1].Name == "Super Health Potion")
         {
-            InventoryList.Add(ShopList[shopChoice - 1]);
+            for (int i = 0; i < buyQuantity; i++)
+            {
+                InventoryList.Add(ShopList[shopChoice - 1]);
+                player.Gold -= (ShopList[shopChoice - 1].Price * buyQuantity);
+            }
+
         }
         else if (ShopList[shopChoice - 1].Name == "Armor Upgrade")
         {
-            player.Defence += 5;
-            Console.WriteLine("Your defence has increased by 5!");
+            for (int i = 0; i < buyQuantity; i++)
+            {
+                player.Defence += 5;
+                player.Gold -= (ShopList[shopChoice - 1].Price * buyQuantity);
+            }
+
+            Console.WriteLine("Your defence has increased by " + buyQuantity * 5 + "!");
         }
         else if (ShopList[shopChoice - 1].Name == "Sword Upgrade")
         {
-            player.Damage += 5;
-            Console.WriteLine("Your damage has increased by 5!");
+            for (int i = 0; i < buyQuantity; i++)
+            {
+                player.Defence += 5;
+                player.Gold -= (ShopList[shopChoice - 1].Price * buyQuantity);
+            }
+
+            Console.WriteLine("Your damage has increased by " + buyQuantity * 5 + "!");
         }
     }
     static void Main(string[] args)
@@ -89,6 +102,7 @@ public class Program
         int shopChoice = 0;
         string buyChoice = "n";
         string quitChoice = "n";
+        int buyQuantity;
 
         Console.Clear();
         Console.WriteLine("Choose player name: ");
@@ -215,30 +229,43 @@ public class Program
                         Console.WriteLine("\nWould you like to buy this item? (y/n)");
                         buyChoice = Console.ReadLine();
 
-                        if (buyChoice.ToLower() == "y")
+                        if (buyChoice.ToLower() != "y" && buyChoice.ToLower() != "n")
                         {
-                            if (player.Gold >= ShopList[shopChoice - 1].Price)
-                            {
-                                Console.Clear();
-                                BuyItem(player, ShopList, InventoryList, shopChoice);
-                                Console.WriteLine(ShopList[shopChoice - 1].Name + " purchased!");
-                                Thread.Sleep(2000);
-                            }
-                            else
-                            {
-                                Console.Clear();
-                                Console.WriteLine("You don't have enough gold to buy this item. Come back when you have grinded some more!");
-                                Thread.Sleep(3000);
-                            }
-                        }
-                        else if (buyChoice.ToLower() == "n")
-                        {
-                            //returns to lobby
+                            Console.Clear();
+                            Console.WriteLine("Invalid choice returning to shop");
+                            Thread.Sleep(1500);
                         }
                         else
                         {
-                            Console.WriteLine("Invalid choice. Returning to main menu.\n");
-                            Thread.Sleep(1000);
+                            Console.Clear();
+                            Console.WriteLine("How many would you like to buy?:");
+                            buyQuantity = Convert.ToInt32(Console.ReadLine());
+
+                            if (buyChoice.ToLower() == "y")
+                            {
+                                if (player.Gold >= (ShopList[shopChoice - 1].Price * buyQuantity))
+                                {
+                                    Console.Clear();
+                                    BuyItem(player, ShopList, InventoryList, shopChoice, buyQuantity);
+                                    Console.WriteLine(ShopList[shopChoice - 1].Name + " purchased!");
+                                    Thread.Sleep(2000);
+                                }
+                                else
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine("You don't have enough gold to buy this item. Come back when you have grinded some more!");
+                                    Thread.Sleep(3000);
+                                }
+                            }
+                            else if (buyChoice.ToLower() == "n")
+                            {
+                                //returns to lobby
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid choice. Returning to main menu.\n");
+                                Thread.Sleep(1000);
+                            }
                         }
                     }
                 }
