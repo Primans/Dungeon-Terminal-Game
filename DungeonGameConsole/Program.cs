@@ -59,25 +59,41 @@ public class ShopItem
     }
 }
 
-public class Inventory
-{
-    
-}
-
 
 public class Program
 {
+    static void BuyItem(Player player, List<ShopItem> ShopList, List<ShopItem> InventoryList, int shopChoice)
+    {
+        player.Gold -= ShopList[shopChoice - 1].Price;
+
+        if (ShopList[shopChoice - 1].Name == "Health Potion" || ShopList[shopChoice - 1].Name == "Super Health Potion")
+        {
+            InventoryList.Add(ShopList[shopChoice - 1]);
+        }
+        else if (ShopList[shopChoice - 1].Name == "Armor Upgrade")
+        {
+            player.Defence += 5;
+            Console.WriteLine("Your defence has increased by 5!");
+        }
+        else if (ShopList[shopChoice - 1].Name == "Sword Upgrade")
+        {
+            player.Damage += 5;
+            Console.WriteLine("Your damage has increased by 5!");
+        }
+    }
     static void Main(string[] args)
     {
         bool ShowMenu = true;
+        bool ShowShop = true;
         string viewAnotherEnemy = "y";
         int shopChoice = 0;
         string buyChoice = "n";
+        string quitChoice = "n";
 
         Console.Clear();
-
         Console.WriteLine("Choose player name: ");
         string playerName = Console.ReadLine();
+
 
         // format playerName, health, damage, level, experience, gold, defence
         Player player = new Player(playerName, 100, 15, 1, 0, 0, 0);
@@ -91,13 +107,18 @@ public class Program
 
         List<ShopItem> ShopList = new List<ShopItem>();
         //format 
-        ShopList.Add(new ShopItem("Health Potion", "Brewed from herbs found deep within the Whispering Forest. Adventurers swear it tastes worse than it smells.\nRestores 25 health", 10));
-        ShopList.Add(new ShopItem("Super Health Potion", "A rare crimson brew said to contain the blood of ancient beasts. One sip can bring even a dying warrior back to their feet.\nRestores 75 health ", 40));
-        ShopList.Add(new ShopItem("Armor Upgrade", "Reinforced with fragments of old knight armor, each piece carries the scars of battles long forgotten.\nDecreases damage taken from all enemies", 50));
-        ShopList.Add(new ShopItem("Sword Upgrade", "Forged with a shard of enchanted steel, its edge grows sharper with every battle.\nIncreases damage dealt by the player", 50));
+        ShopList.Add(new ShopItem("Health Potion", "Brewed from herbs found deep within the Whispering Forest. Adventurers swear it tastes worse than it smells.\nUsed in battles to restore 25 health", 10));
+        ShopList.Add(new ShopItem("Super Health Potion", "A rare crimson brew said to contain the blood of ancient beasts. One sip can bring even a dying warrior back to their feet.\nUsed in battles to restore 75 health ", 40));
+        ShopList.Add(new ShopItem("Armor Upgrade", "Reinforced with fragments of old knight armor, each piece carries the scars of battles long forgotten.\nIncreases defence permanently by 5", 50));
+        ShopList.Add(new ShopItem("Sword Upgrade", "Forged with a shard of enchanted steel, its edge grows sharper with every battle.\nIncreases damage dealt by the player permanently by 5", 50));
 
-        List<Inventory> InventoryList = new List<Inventory>();
+        List<ShopItem> InventoryList = new List<ShopItem>();
 
+
+        if (playerName == "dev")
+        {
+            player.Gold = 100000;
+        }
 
 
         while (ShowMenu)
@@ -132,7 +153,7 @@ public class Program
                 Console.WriteLine("Level: " + player.Level);
                 Console.WriteLine("Experience: " + player.Experience + "/100");
 
-                Console.WriteLine("\nType anything to return...");
+                Console.WriteLine("\nPress Enter to return...");
                 Console.ReadLine();
             }
             if (choice == 3)
@@ -161,56 +182,64 @@ public class Program
             }
             if (choice == 4)
             {
-                Console.Clear();
+                ShowShop = true;
 
-                Console.WriteLine("Welcome to the shop!");
-                for (int i = 0; i < ShopList.Count; i++)
+                while (ShowShop)
                 {
-                    Console.WriteLine((i + 1) + ". " + ShopList[i].Name);
-                }
-                Console.WriteLine("5. Exit Shop");
+                    Console.Clear();
 
-                Console.WriteLine("\nSelect an item to inspect: ");
-                shopChoice = Convert.ToInt32(Console.ReadLine());
-
-                Console.Clear();
-
-                if (shopChoice < 1 || shopChoice > (ShopList.Count + 1))
-                {
-                    Console.WriteLine("Invalid choice. Returning to main menu.\n");
-                    Thread.Sleep(1500);
-                }
-                else if (shopChoice == 5)
-                {
-                }
-                else
-                {
-                    Console.WriteLine(ShopList[shopChoice - 1].Name + "\n" + ShopList[shopChoice - 1].Description + "\nCost: " + ShopList[shopChoice - 1].Price + " Gold");
-                    Console.WriteLine("\nWould you like to buy this item? (y/n)");
-                    buyChoice = Console.ReadLine();
-
-                    if (buyChoice.ToLower() == "y")
+                    Console.WriteLine("Welcome to the shop!");
+                    for (int i = 0; i < ShopList.Count; i++)
                     {
-                        if (player.Gold >= ShopList[shopChoice - 1].Price)
-                        {
-                            player.Gold -= ShopList[shopChoice - 1].Price;
-                            Console.WriteLine(ShopList[shopChoice - 1].Name + " purchased!");
-                        }
-                        else
-                        {
-                            Console.Clear();
-                            Console.WriteLine("You don't have enough gold to buy this item. Come back when you have grinded some more!");
-                            Thread.Sleep(3000);
-                        }
+                        Console.WriteLine((i + 1) + ". " + ShopList[i].Name);
                     }
-                    else if (buyChoice.ToLower() == "n")
+                    Console.WriteLine("5. Exit Shop");
+
+                    Console.WriteLine("\nSelect an item to inspect: ");
+                    shopChoice = Convert.ToInt32(Console.ReadLine());
+
+                    Console.Clear();
+
+                    if (shopChoice < 1 || shopChoice > (ShopList.Count + 1))
                     {
-                        //return lobby
+                        Console.WriteLine("Invalid choice. Returning to main menu.\n");
+                        Thread.Sleep(1500);
+                    }
+                    else if (shopChoice == 5)
+                    {
+                        ShowShop = false;
                     }
                     else
                     {
-                        Console.WriteLine("Invalid choice. Returning to main menu.\n");
-                        Thread.Sleep(1000);
+                        Console.WriteLine(ShopList[shopChoice - 1].Name + "\n" + ShopList[shopChoice - 1].Description + "\nCost: " + ShopList[shopChoice - 1].Price + " Gold");
+                        Console.WriteLine("\nWould you like to buy this item? (y/n)");
+                        buyChoice = Console.ReadLine();
+
+                        if (buyChoice.ToLower() == "y")
+                        {
+                            if (player.Gold >= ShopList[shopChoice - 1].Price)
+                            {
+                                Console.Clear();
+                                BuyItem(player, ShopList, InventoryList, shopChoice);
+                                Console.WriteLine(ShopList[shopChoice - 1].Name + " purchased!");
+                                Thread.Sleep(2000);
+                            }
+                            else
+                            {
+                                Console.Clear();
+                                Console.WriteLine("You don't have enough gold to buy this item. Come back when you have grinded some more!");
+                                Thread.Sleep(3000);
+                            }
+                        }
+                        else if (buyChoice.ToLower() == "n")
+                        {
+                            //returns to lobby
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid choice. Returning to main menu.\n");
+                            Thread.Sleep(1000);
+                        }
                     }
                 }
 
@@ -218,13 +247,38 @@ public class Program
             }
             if (choice == 5)
             {
-                //view inventory
+                Console.Clear();
+                Console.WriteLine("Inventory:");
+                for (int i = 0; i < InventoryList.Count; i++)
+                {
+                    Console.WriteLine((i + 1) + ". " + InventoryList[i].Name);
+                }
+
+                Console.WriteLine("\nPress Enter to return...");
+                Console.ReadLine();
             }
             if (choice == 6)
             {
                 Console.Clear();
-                Console.WriteLine("Thanks for playing!");
-                ShowMenu = false;
+                Console.WriteLine("IMPORTANT NOTE: YOU WILL LOSE ALL PROGRESS IF YOU QUIT!");
+                Console.WriteLine("Are you 10000000000% sure you want to quit? (y/n)");
+                quitChoice = Console.ReadLine();
+
+                if (quitChoice.ToLower() == "y")
+                {
+                    Console.Clear();
+                    Console.WriteLine("Thanks for playing!");
+                    ShowMenu = false;
+                }
+                else if (quitChoice.ToLower() == "n")
+                {
+                    //returns to lobby
+                }
+                else
+                {
+                    Console.WriteLine("Invalid choice. Returning to main menu.\n");
+                    Thread.Sleep(1000);
+                }
             }
         }
     }
