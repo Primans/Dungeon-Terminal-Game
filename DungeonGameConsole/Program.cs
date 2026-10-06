@@ -1,4 +1,4 @@
-﻿// basklass som alla typer av karaktärer i spelet ärver från
+﻿using System.Linq.Expressions;
 using System.Security.Cryptography.X509Certificates;
 
 public class Character
@@ -87,7 +87,7 @@ public class Program
         {
             for (int i = 0; i < buyQuantity; i++)
             {
-                player.Defence += 5;
+                player.Damage += 5;
                 player.Gold -= (ShopList[shopChoice - 1].Price * buyQuantity);
             }
 
@@ -102,6 +102,8 @@ public class Program
         int shopChoice = 0;
         string buyChoice = "n";
         string quitChoice = "n";
+        string fightChoice;
+        string attackChoice;
         int buyQuantity;
 
         Console.Clear();
@@ -152,7 +154,117 @@ public class Program
 
             if (choice == 1)
             {
-                // fighting
+                // väljer en random enemy och skapar en variabel som du kan använda för att referera till den
+                int randomEnemyIndex = new Random().Next(EnemyList.Count);
+                Enemy enemy = EnemyList[randomEnemyIndex];
+                int originalHealth = enemy.Health;
+
+
+                Console.Clear();
+                Console.WriteLine("A wild LVL[" + enemy.EnemyLevel + "] " + enemy.Name + " has appeared!");
+                Console.WriteLine("Do you accept or decline the fight? (a/d)");
+
+                Console.WriteLine("\nChoose an option: ");
+                fightChoice = Console.ReadLine();
+
+                if (fightChoice.ToLower() == "a")
+                {
+                    Console.Clear();
+                    Console.WriteLine("You have accepted the fight!");
+                    Console.WriteLine("The LVL[" + enemy.EnemyLevel + "] " + enemy.Name + " has " + enemy.Health + " health and deals " + enemy.Damage + " damage.");
+                    Thread.Sleep(5000);
+
+
+                    while (enemy.Health > 0 && player.Health > 0)
+                    {
+                        // enemy attacks
+                        Console.Clear();
+                        Console.WriteLine("The LVL[" + enemy.EnemyLevel + "] " + enemy.Name + " swings and deals " + enemy.Damage + " damage to you!");
+                        player.Health -= enemy.Damage;
+                        Console.WriteLine("You have " + player.Health + " health left.");
+
+                        if (player.Health <= 0)
+                        {
+                            // defeat!
+                            Console.Clear();
+                            Console.WriteLine("You don't have any health left! GG");
+                            Console.WriteLine("You have been defeated by the LVL[" + enemy.EnemyLevel + "] " + enemy.Name + "!");
+                            player.Health = 100;
+                            Thread.Sleep(4000);
+                            break;
+                        }
+                        else
+                        {
+                            // player chooses action
+                            bool validChoice = false;
+
+                            while (!validChoice)
+                            {
+                                Console.WriteLine("\nQuick! What do you do?! Attack or Heal using a potion? (a/h)");
+                                attackChoice = Console.ReadLine();
+
+                                if (attackChoice.ToLower() == "a")
+                                {
+                                    validChoice = true;
+
+                                    Console.Clear();
+                                    Console.WriteLine("You swing your sword and deal " + player.Damage + " damage to the LVL[" + enemy.EnemyLevel + "] " + enemy.Name + "!");
+                                    enemy.Health -= player.Damage;
+
+                                    if (enemy.Health <= 0)
+                                    {
+                                        enemy.Health = 0;
+                                    }
+
+                                    Console.WriteLine("The LVL[" + enemy.EnemyLevel + "] " + enemy.Name + " has " + enemy.Health + " health left.");
+                                    Thread.Sleep(5000);
+                                }
+                                else if (attackChoice.ToLower() == "h")
+                                {
+                                    validChoice = true;
+
+                                    // healing mechanic to be added
+                                    Console.Clear();
+                                }
+                                else
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine("Invalid choice. Try again!\n");
+                                    Thread.Sleep(1500);
+                                    Console.Clear();
+                                }
+                            }
+                        }
+                    }
+
+                    if (enemy.Health <= 0)
+                    {
+                        // victory!
+                        Console.Clear();
+                        Console.WriteLine("You have defeated the LVL[" + enemy.EnemyLevel + "] " + enemy.Name + "!");
+                        Console.WriteLine("You have gained " + enemy.GivesExperience + " experience and " + enemy.GivesGold + " gold!");
+                        player.Experience += enemy.GivesExperience;
+                        player.Gold += enemy.GivesGold;
+                        enemy.Health = originalHealth;
+                        player.Health = 100;
+                        Console.WriteLine("You now have " + player.Experience + "/100 experience and " + player.Gold + " gold.");
+                        Console.WriteLine("\nYour health has also been reset to 100!");
+                        Console.WriteLine("\nPress enter to return to the main menu.");
+                        Console.ReadLine();
+                    }
+                }
+                else if (fightChoice.ToLower() == "d")
+                {
+                    Console.Clear();
+                    Console.WriteLine("You have declined the fight, come back when you have grown a pair of balls!");
+                    Thread.Sleep(3000);
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("Invalid choice. Returning to main menu.\n");
+                    Thread.Sleep(1500);
+                }
             }
             if (choice == 2)
             {

@@ -1,4 +1,4 @@
 List of things to implement:
 
-1. Fighting mechanic + random boss each time
+1. Add healing mechanic to fighting
 2. Fix crashes (ex. when typing letter into shopChoice)
