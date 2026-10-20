@@ -69,17 +69,19 @@ public class Program
             for (int i = 0; i < buyQuantity; i++)
             {
                 InventoryList.Add(ShopList[shopChoice - 1]);
-                player.Gold -= (ShopList[shopChoice - 1].Price * buyQuantity);
             }
 
+            player.Gold -= (ShopList[shopChoice - 1].Price * buyQuantity);
+
+            Console.WriteLine("You have purchased " + buyQuantity + " " + ShopList[shopChoice - 1].Name + "!");
         }
         else if (ShopList[shopChoice - 1].Name == "Armor Upgrade")
         {
             for (int i = 0; i < buyQuantity; i++)
             {
                 player.Defence += 5;
-                player.Gold -= (ShopList[shopChoice - 1].Price * buyQuantity);
             }
+            player.Gold -= (ShopList[shopChoice - 1].Price * buyQuantity);
 
             Console.WriteLine("Your defence has increased by " + buyQuantity * 5 + "!");
         }
@@ -88,8 +90,8 @@ public class Program
             for (int i = 0; i < buyQuantity; i++)
             {
                 player.Damage += 5;
-                player.Gold -= (ShopList[shopChoice - 1].Price * buyQuantity);
             }
+            player.Gold -= (ShopList[shopChoice - 1].Price * buyQuantity);
 
             Console.WriteLine("Your damage has increased by " + buyQuantity * 5 + "!");
         }
@@ -100,6 +102,7 @@ public class Program
         bool ShowShop = true;
         string viewAnotherEnemy = "y";
         int shopChoice = 0;
+        int healChoice = 0;
         string buyChoice = "n";
         string quitChoice = "n";
         string fightChoice;
@@ -122,9 +125,9 @@ public class Program
         EnemyList.Add(new Enemy("Dragon", 500, 100, 200, 100, 100));
 
         List<ShopItem> ShopList = new List<ShopItem>();
-        //format 
-        ShopList.Add(new ShopItem("Health Potion", "Brewed from herbs found deep within the Whispering Forest. Adventurers swear it tastes worse than it smells.\nUsed in battles to restore 25 health", 10));
-        ShopList.Add(new ShopItem("Super Health Potion", "A rare crimson brew said to contain the blood of ancient beasts. One sip can bring even a dying warrior back to their feet.\nUsed in battles to restore 75 health ", 40));
+        //format name, description, price
+        ShopList.Add(new ShopItem("Health Potion", "Brewed from herbs found deep within the Whispering Forest. Adventurers swear it tastes worse than it smells.\nUsed in battles to restore ut to 25 health", 10));
+        ShopList.Add(new ShopItem("Super Health Potion", "A rare crimson brew said to contain the blood of ancient beasts. One sip can bring even a dying warrior back to their feet.\nUsed in battles to restore up to 75 health ", 40));
         ShopList.Add(new ShopItem("Armor Upgrade", "Reinforced with fragments of old knight armor, each piece carries the scars of battles long forgotten.\nIncreases defence permanently by 5", 50));
         ShopList.Add(new ShopItem("Sword Upgrade", "Forged with a shard of enchanted steel, its edge grows sharper with every battle.\nIncreases damage dealt by the player permanently by 5", 50));
 
@@ -221,10 +224,74 @@ public class Program
                                 }
                                 else if (attackChoice.ToLower() == "h")
                                 {
-                                    validChoice = true;
+                                    if (player.Health >= 100)
+                                    {
+                                        Console.Clear();
+                                        Console.WriteLine("You already have full health!");
+                                        Thread.Sleep(1500);
+                                    }
 
-                                    // healing mechanic to be added
-                                    Console.Clear();
+                                    else
+                                    {
+                                        Console.Clear();
+                                        Console.WriteLine("You have " + player.Health + " health.");
+                                        Console.WriteLine("1. Health Potion (Restores 25 health)");
+                                        Console.WriteLine("2. Super Health Potion (Restores 75 health)");
+                                        Console.WriteLine("Which potion would you like to use?: ");
+
+                                        healChoice = Convert.ToInt32(Console.ReadLine());
+
+                                        if (healChoice == 1)
+                                        {
+                                            if (InventoryList.Any(x => x.Name == "Health Potion"))
+                                            {
+                                                validChoice = true;
+
+                                                var potion = InventoryList.First(x => x.Name == "Health Potion");
+                                                InventoryList.Remove(potion);
+
+                                                player.Health = Math.Min(player.Health + 25, 100);
+                                                Console.Clear();
+                                                Console.WriteLine("You have used a Health Potion!");
+                                                Console.WriteLine("You now have " + player.Health + " health.");
+                                                Thread.Sleep(3000);
+                                            }
+                                            else
+                                            {
+                                                Console.Clear();
+                                                Console.WriteLine("You don't have that potion in your inventory! Try again!\n");
+                                                Thread.Sleep(2000);
+                                            }
+                                        }
+                                        else if (healChoice == 2)
+                                        {
+                                            if (InventoryList.Any(x => x.Name == "Super Health Potion"))
+                                            {
+                                                validChoice = true;
+
+                                                var potion = InventoryList.First(x => x.Name == "Super Health Potion");
+                                                InventoryList.Remove(potion);
+
+                                                player.Health = Math.Min(player.Health + 75, 100);
+                                                Console.Clear();
+                                                Console.WriteLine("You have used a Super Health Potion!");
+                                                Console.WriteLine("You now have " + player.Health + " health.");
+                                                Thread.Sleep(3000);
+                                            }
+                                            else 
+                                            {
+                                                Console.Clear();
+                                                Console.WriteLine("You don't have that potion in your inventory! Try again!\n");
+                                                Thread.Sleep(2000);
+                                            }
+                                        }
+                                        else if (healChoice != 1 && healChoice != 2)
+                                        {
+                                            Console.Clear();
+                                            Console.WriteLine("Invalid choice. Try again!\n");
+                                            Thread.Sleep(2000);
+                                        }
+                                    }
                                 }
                                 else
                                 {
@@ -350,11 +417,12 @@ public class Program
                         else
                         {
                             Console.Clear();
-                            Console.WriteLine("How many would you like to buy?:");
-                            buyQuantity = Convert.ToInt32(Console.ReadLine());
 
                             if (buyChoice.ToLower() == "y")
                             {
+                                Console.WriteLine("How many would you like to buy?:");
+                                buyQuantity = Convert.ToInt32(Console.ReadLine());
+
                                 if (player.Gold >= (ShopList[shopChoice - 1].Price * buyQuantity))
                                 {
                                     Console.Clear();
@@ -371,7 +439,8 @@ public class Program
                             }
                             else if (buyChoice.ToLower() == "n")
                             {
-                                //returns to lobby
+                                Console.WriteLine("Returning to main menu.\n");
+                                Thread.Sleep(500);
                             }
                             else
                             {
