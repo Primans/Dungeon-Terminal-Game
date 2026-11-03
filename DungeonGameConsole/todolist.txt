@@ -1,4 +1,4 @@
 List of things to implement:
 
-1. Make leveling up possible + add rewards for leveling up
-2. Fix crashes (ex. when typing letter into shopChoice or healChoice)
+1. Fix crashes (ex. when typing letter into shopChoice, healChoice or buyQuantity)
+2. Implement a way to delete the local save
