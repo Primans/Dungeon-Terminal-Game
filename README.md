@@ -29,4 +29,4 @@ The save file is created in the project folder and contains your character's sta
 
 This project was created to practice programming in C# and learn more about object-oriented programming, methods, classes, lists and file handling.
 
-**More features and improvements to be added in the future.**
+**More features and improvements to be added in the future!**
