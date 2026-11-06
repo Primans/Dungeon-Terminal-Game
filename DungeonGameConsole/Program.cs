@@ -201,6 +201,7 @@ using System.Linq;
             string quitChoice = "n";
             string fightChoice;
             string attackChoice;
+            int optionsChoice;
             int buyQuantity;
 
 
@@ -263,10 +264,8 @@ using System.Linq;
                 Console.WriteLine("3. Show the enemies stats");
                 Console.WriteLine("4. Open shop");
                 Console.WriteLine("5. View inventory");
-                Console.WriteLine("6. Credits");
-                Console.WriteLine("7. View guide");
-                Console.WriteLine("8. Save game");
-                Console.WriteLine("9. Quit game");
+                Console.WriteLine("6. Options");
+                Console.WriteLine("7. Quit game");
                 Console.WriteLine("\nChoose an option: ");
                 int choice = Convert.ToInt32(Console.ReadLine());
 
@@ -592,71 +591,93 @@ using System.Linq;
                     Console.WriteLine("\nPress Enter to return...");
                     Console.ReadLine();
                 }
-                if (choice == 6) //view credits
+                if (choice == 6) //options
                 {
                     Console.Clear();
 
-                    Console.WriteLine("Game created by: [Primans]\nGithub: [https://github.com/Primans]\n\nSpecial thanks to: [Me, Myself and I]\n\nPress Enter to return...");
-                    Console.ReadLine();
-                }
-                if (choice == 7) //view guide
-                {
-                    Console.Clear();
-                    Console.WriteLine("Dungeon Game - Guide");
-                    Console.WriteLine("Welcome to Dungeon Game! Your goal is to become stronger by fighting enemies, earning experience (XP), collecting gold and upgrading your character.");
+                    Console.WriteLine("1. View guide");
+                    Console.WriteLine("2. Save game");
+                    Console.WriteLine("3. View credits");
+                    Console.WriteLine("4. Delete save file (DANGEROUS)");
+                    Console.WriteLine("5. Return to main menu");
 
-                    Console.WriteLine("\nHow to play:");
+                    Console.WriteLine("\nChoose an option: ");
+                    optionsChoice = Convert.ToInt32(Console.ReadLine());
 
-                    Console.WriteLine("* Fight enemies: Choose option 1 in the main menu to encounter a random enemy. You can accept or decline the fight.");
-                    Console.WriteLine("* Attack: Deal damage to your opponent using your sword.");
-                    Console.WriteLine("* Heal: Use Health Potions or Super Health Potions to restore health during combat.");
-                    Console.WriteLine("* Earn rewards: Defeating enemies grants you XP and gold.");
-                    Console.WriteLine("* Level up: Every 100 XP increases your level. Leveling up also improves your character's stats.");
-                    Console.WriteLine("* Visit the shop: Spend your gold on potions, armor upgrades and sword upgrades.");
-                    Console.WriteLine("* Manage inventory: View your collected potions and use them during battles.");
-
-                    Console.WriteLine("\nYour goal:");
-
-                    Console.WriteLine("Defeat increasingly powerful enemies, improve your equipment and become the strongest adventurer in the dungeon!");
-
-                    Console.WriteLine("\nGood luck, adventurer!\n");
-
-                    Console.WriteLine("\n\nPress Enter to return to the menu...");
-                    Console.ReadLine();
-                }
-                if (choice == 8) //save game
-                {
-                    Console.Clear();
-                    Console.WriteLine("Saving game...");
-                    
-                    SaveGame(player, InventoryList);
-                    Console.ReadLine();
-                }
-                if (choice == 9) //quit the game
+                    if (optionsChoice == 1) //view guide
                     {
                         Console.Clear();
-                        Console.WriteLine("IMPORTANT NOTE: YOU WILL LOSE ALL UNSAVED PROGRESS IF YOU QUIT!");
-                        Console.WriteLine("Are you 10000000000% sure you want to quit? (y/n)");
-                        quitChoice = Console.ReadLine();
+                        Console.WriteLine("Dungeon Game - Guide");
+                        Console.WriteLine("Welcome to Dungeon Game! Your goal is to become stronger by fighting enemies, earning experience (XP), collecting gold and upgrading your character.");
 
-                        if (quitChoice.ToLower() == "y")
-                        {
-                            Console.Clear();
-                            Console.WriteLine("Quitting game...");
-                            Console.WriteLine("Thanks for playing!");
-                            ShowMenu = false;
-                        }
-                        else if (quitChoice.ToLower() == "n")
-                        {
-                            //returns to lobby
-                        }
-                        else
-                        {
-                            Console.Clear();
-                            Console.WriteLine("Invalid choice. Returning to main menu.\n");
-                            Thread.Sleep(1000);
-                        }
+                        Console.WriteLine("\nHow to play:");
+
+                        Console.WriteLine("* Fight enemies: Choose option 1 in the main menu to encounter a random enemy. You can accept or decline the fight.");
+                        Console.WriteLine("* Attack: Deal damage to your opponent using your sword.");
+                        Console.WriteLine("* Heal: Use Health Potions or Super Health Potions to restore health during combat.");
+                        Console.WriteLine("* Earn rewards: Defeating enemies grants you XP and gold.");
+                        Console.WriteLine("* Level up: Every 100 XP increases your level. Leveling up also improves your character's stats.");
+                        Console.WriteLine("* Visit the shop: Spend your gold on potions, armor upgrades and sword upgrades.");
+                        Console.WriteLine("* Manage inventory: View your collected potions and use them during battles.");
+
+                        Console.WriteLine("\nYour goal:");
+
+                        Console.WriteLine("Defeat increasingly powerful enemies, improve your equipment and become the strongest adventurer in the dungeon!");
+
+                        Console.WriteLine("\nGood luck, adventurer!\n");
+
+                        Console.WriteLine("\nPress Enter to return to the menu...");
+                        Console.ReadLine();
                     }
+                    if (optionsChoice == 2) //save game
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Saving game...");
+
+                        SaveGame(player, InventoryList);
+                        Console.ReadLine();
+                    }
+                    if (optionsChoice == 3) //view credits
+                    {
+                        Console.Clear();
+
+                        Console.WriteLine("Game created by: [Primans]\nGithub: [https://github.com/Primans]\n\nSpecial thanks to: [Me, Myself and I]\n\nPress Enter to return to the menu...");
+                        Console.ReadLine();
+                    }
+                    if (optionsChoice == 4)
+                    {
+                        //delete save to be added
+                    }
+                    if (optionsChoice == 5) //return to main menu
+                    {
+
+                    }
+                }
+                if (choice == 7) //quit the game
+                {
+                    Console.Clear();
+                    Console.WriteLine("IMPORTANT NOTE: YOU WILL LOSE ALL UNSAVED PROGRESS IF YOU QUIT!");
+                    Console.WriteLine("Are you 10000000000% sure you want to quit? (y/n)");
+                    quitChoice = Console.ReadLine();
+
+                    if (quitChoice.ToLower() == "y")
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Quitting game...");
+                        Console.WriteLine("Thanks for playing!");
+                        ShowMenu = false;
+                    }
+                    else if (quitChoice.ToLower() == "n")
+                    {
+                        //returns to lobby
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Invalid choice. Returning to main menu.\n");
+                        Thread.Sleep(1000);
+                    }
+                }
             }
         }
     }
